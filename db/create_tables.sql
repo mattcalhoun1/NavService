@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS nav.models (
 CREATE TABLE IF NOT EXISTS nav.position_log (
     vehicle_id VARCHAR(32),
     entry_num serial,
+    session_id VARCHAR(64),
     created timestamp,
     occurred timestamp,
     position_x float,
@@ -40,6 +41,10 @@ CREATE TABLE IF NOT EXISTS nav.position_log (
 );
 CREATE INDEX IF NOT EXISTS idx_pos_log_veh ON nav.position_log (
     vehicle_id
+);
+CREATE INDEX IF NOT EXISTS idx_pos_log_veh_sess ON nav.position_log (
+    vehicle_id,
+    session_id
 );
 
 CREATE TABLE IF NOT EXISTS nav.position_views (

@@ -43,28 +43,30 @@ class VehicleSerializer(SerializerBase):
 class PositionLogEntrySerializer(SerializerBase):
     entry_num = serializers.IntegerField(required=False)
     occurred = serializers.DateTimeField()
-    vehicle_id = serializers.CharField(required=True, allow_blank=False, max_length=100)
+    vehicle_id = serializers.CharField(required=True, allow_blank=False, max_length=32)
+    session_id = serializers.CharField(required=True, allow_blank=False, max_length=64)
     created = serializers.DateTimeField()
     position_x = serializers.FloatField(required=True)
     position_y = serializers.FloatField(required=True)
-    navmap_id = serializers.CharField(required=True, allow_blank=False, max_length=100)
+    navmap_id = serializers.CharField(required=True, allow_blank=False, max_length=32)
 
-    def get_all_matching (self, vehicle_id, start_time = None, end_time = None):
+    def get_all_matching (self, vehicle_id, session_id, start_time = None, end_time = None):
         entries = []
         query = ''.join([
-            "SELECT created, occurred, position_x, position_y, map_id, entry_num ",
+            "SELECT created, occurred, position_x, position_y, map_id, entry_num, session_id ",
             " FROM nav.position_log ",
-            " WHERE vehicle_id =  %s "
+            " WHERE vehicle_id =  %s and session_id = %s "
         ])
-        params = (vehicle_id,)
+        params = (vehicle_id, session_id)
 
         if start_time is not None:
-            sql = sql + " AND occured >= %s "
-            params = (vehicle_id,start_time)
+            query = query + " AND occured >= %s "
+            params = (vehicle_id,session_id, start_time)
         if end_time is not None:
-            sql = sql + " AND occurred <= %s "
-            params = (vehicle_id,end_time) if start_time is None else (vehicle_id,start_time,end_time)
-        
+            query = query + " AND occurred <= %s "
+            params = (vehicle_id,session_id, end_time) if start_time is None else (vehicle_id,session_id, start_time,end_time)
+        query = query + " ORDER BY entry_num asc"
+
         db = self.get_db()
         db.get_cursor('q').execute(query,params)
         while True:
@@ -79,7 +81,8 @@ class PositionLogEntrySerializer(SerializerBase):
                 position_x = row[2],
                 position_y = row[3],
                 navmap_id = row[4],
-                entry_num = row[5]
+                entry_num = row[5],
+                session_id = row[6]
             ))
 
         db.close_cursor('q')
@@ -100,6 +103,7 @@ class PositionLogEntrySerializer(SerializerBase):
         plog.position_x = validated_data.get('position_x')
         plog.position_y = validated_data.get('position_y')
         plog.navmap_id = validated_data.get('navmap_id')
+        plog.session_id = validated_data.get('session_id')
 
         self.__add_log_entry(log_entry=plog)
         return plog
@@ -115,8 +119,8 @@ class PositionLogEntrySerializer(SerializerBase):
         logging.getLogger(__name__).info(f"Saving position log to postgres for: {log_entry.vehicle_id}")
         
         sql = ''.join([
-            "INSERT INTO nav.position_log (vehicle_id, created, occurred, position_x, position_y, map_id) ",
-            " VALUES (%s, %s, %s, %s, %s, %s) "
+            "INSERT INTO nav.position_log (vehicle_id, created, occurred, position_x, position_y, map_id, session_id) ",
+            " VALUES (%s, %s, %s, %s, %s, %s, %s) "
         ])
         params = (
             log_entry.vehicle_id,
@@ -125,6 +129,7 @@ class PositionLogEntrySerializer(SerializerBase):
             log_entry.position_x,
             log_entry.position_y,
             log_entry.navmap_id,
+            log_entry.session_id
         )
 
         db = self.get_db()

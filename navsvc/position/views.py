@@ -8,17 +8,17 @@ import logging
 from datetime import datetime
 
 @csrf_exempt
-def position_log(request, vehicle_id, start_time = None, end_time = None):
+def position_log(request, vehicle_id, session_id, start_time = None, end_time = None):
     logging.getLogger(__name__).info(f"position_log {request.method}: {request}")
 
     """
     List all vehicles, or create a new vehicle.
     """
     if request.method == 'GET':
-        logging.getLogger(__name__).info(f"Retrieving position log, vehicle: {vehicle_id}, start time: {start_time}, end time: {end_time}")
+        logging.getLogger(__name__).info(f"Retrieving position log, vehicle: {vehicle_id}, session: {session_id}, start time: {start_time}, end time: {end_time}")
         #vehicles = Vehicle.objects.all()
         serializer = PositionLogEntrySerializer(data=None)
-        entries = serializer.get_all_matching(vehicle_id=vehicle_id, start_time=start_time, end_time=end_time)
+        entries = serializer.get_all_matching(vehicle_id=vehicle_id, session_id=session_id, start_time=start_time, end_time=end_time)
         serializer.cleanup()
         out_serializer = PositionLogEntrySerializer(data=entries, many=True)
         out_serializer.is_valid()
