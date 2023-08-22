@@ -25,6 +25,7 @@ class VehicleSerializer(serializers.Serializer):
         return instance
 
 class PositionLogEntrySerializer(serializers.Serializer):
+    entry_num = serializers.IntegerField()
     occurred = serializers.DateTimeField()
     vehicle_id = serializers.CharField(required=True, allow_blank=False, max_length=100)
     created = serializers.DateTimeField()
@@ -39,6 +40,7 @@ class PositionLogEntrySerializer(serializers.Serializer):
         logging.getLogger(__name__).info(f"Creating position log entry: {validated_data}")
         #plog = PositionLogEntry.objects.create(**validated_data)
         plog = PositionLogEntry()
+        plog.entry_num = validated_data.get('entry_num')
         plog.occurred = validated_data.get('occurred')
         plog.vehicle_id = validated_data.get('vehicle_id')
         plog.created = validated_data.get('created')
@@ -53,39 +55,11 @@ class PositionLogEntrySerializer(serializers.Serializer):
         """
         logging.getLogger(__name__).info(f"Saving position log: {validated_data}")
 
+        instance.entry_num = validated_data.get('entry_num', instance.occurred) 
         instance.occurred = validated_data.get('occurred', instance.occurred)
         instance.vehicle_id = validated_data.get('vehicle_id', instance.vehicle_id)
         instance.created = validated_data.get('created', instance.created)
         instance.position_x = validated_data.get('position_x', instance.position_x)
         instance.position_y = validated_data.get('position_y', instance.position_y)
         instance.navmap_id = validated_data.get('navmap_id', instance.navmap_id)
-        return instance
-    
-class PositionLogSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    title = serializers.CharField(required=False, allow_blank=True, max_length=100)
-    code = serializers.CharField(style={'base_template': 'textarea.html'})
-    linenos = serializers.BooleanField(required=False)
-    language = serializers.ChoiceField(choices=LANGUAGE_CHOICES, default='python')
-    style = serializers.ChoiceField(choices=STYLE_CHOICES, default='friendly')
-
-    def create(self, validated_data):
-        """
-        Create and return a new `Snippet` instance, given the validated data.
-        """
-        logging.getLogger(__name__).info(f"Creating position log: {validated_data}")
-        plog = PositionLog.objects.create(**validated_data)
-        return plog
-
-    def update(self, instance, validated_data):
-        """
-        Update and return an existing `Snippet` instance, given the validated data.
-        """
-        logging.getLogger(__name__).info(f"Saving position log: {validated_data}")
-        #instance.title = validated_data.get('title', instance.title)
-        #instance.code = validated_data.get('code', instance.code)
-        #instance.linenos = validated_data.get('linenos', instance.linenos)
-        #instance.language = validated_data.get('language', instance.language)
-        #instance.style = validated_data.get('style', instance.style)
-        #instance.save()
         return instance

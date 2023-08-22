@@ -5,6 +5,7 @@ from rest_framework.parsers import JSONParser
 from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap
 from position.serializers import VehicleSerializer, PositionLogEntrySerializer
 import logging
+from datetime import datetime
 
 @csrf_exempt
 def position_log(request, vehicle_id, start_time = None, end_time = None):
@@ -16,11 +17,21 @@ def position_log(request, vehicle_id, start_time = None, end_time = None):
     if request.method == 'GET':
         logging.getLogger(__name__).info(f"Retrieving position log, vehicle: {vehicle_id}, start time: {start_time}, end time: {end_time}")
         #vehicles = Vehicle.objects.all()
-        vehicles = []
+        entries = []
         for i in range(10):
-            vehicles.append(Vehicle(vehicle_id=f"v{i}", name="another vehicle"))
+            entries.append(
+                PositionLogEntry(
+                    entry_num=i,
+                    vehicle_id=vehicle_id,
+                    occurred = datetime.now(),
+                    created = datetime.now(),
+                    position_x = i,
+                    position_y = 0,
+                    navmap_id = 'basement'
+                )
+            )
 
-        serializer = VehicleSerializer(vehicles, many=True)
+        serializer = PositionLogEntrySerializer(entries, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
