@@ -91,7 +91,22 @@ def position_view(request, vehicle_id, entry_num = None, camera_id = None):
             serializer.save()
             serializer.cleanup()
             return JsonResponse({'result':'success'}, status=201)
-        
+
+@csrf_exempt
+def recent_sessions(request, vehicle_id):
+    logging.getLogger(__name__).info(f"recent_sessions {request.method}: {request}")
+
+    """
+    List all vehicles, or create a new vehicle.
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving recent sessions, vehicle: {vehicle_id}")
+        #vehicles = Vehicle.objects.all()
+        serializer = PositionLogEntrySerializer(data=None)
+        entries = serializer.get_recent_sessions (vehicle_id = vehicle_id, max_sessions = 10)
+        serializer.cleanup()
+        return JsonResponse(entries, safe=False)
+
 @csrf_exempt
 def position_log(request, vehicle_id, session_id, start_time = None, end_time = None):
     logging.getLogger(__name__).info(f"position_log {request.method}: {request}")

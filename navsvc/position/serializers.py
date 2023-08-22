@@ -253,6 +253,34 @@ class PositionLogEntrySerializer(SerializerBase):
     position_y = serializers.FloatField(required=True)
     navmap_id = serializers.CharField(required=True, allow_blank=False, max_length=32)
 
+    def get_recent_sessions (self, vehicle_id, max_sessions = 10):
+        entries = []
+        query = ''.join([
+            "SELECT "
+            " distinct (session_id) as session_id, ",
+            " (SELECT MAX(occurred) from nav.position_log l where l.session_id = session_id) as latest "
+            " FROM nav.position_log ",
+            " WHERE vehicle_id = %s "
+            " ORDER BY latest desc ",
+            "LIMIT %s"
+        ])
+        params = (vehicle_id, max_sessions)
+
+        db = self.get_db()
+        db.get_cursor('q').execute(query,params)
+        while True:
+            row = db.get_cursor('q').fetchone()
+            if row is None:
+                break   
+
+            entries.append({
+                "session_id": row[0],
+                "last_activity": row[1]
+            })
+
+        db.close_cursor('q')
+        return entries
+
     def get_all_matching (self, vehicle_id, session_id, start_time = None, end_time = None):
         entries = []
         query = ''.join([
