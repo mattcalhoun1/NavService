@@ -1,7 +1,9 @@
 from rest_framework import serializers
-from position.models import PositionLog, PositionLogEntry, NavMap, Vehicle, LANGUAGE_CHOICES, STYLE_CHOICES
+from position.models import PositionLog, PositionLogEntry, NavMap, Vehicle, NavModel, LANGUAGE_CHOICES, STYLE_CHOICES
 import logging
 from helpers.postgres_helper import PostgresHelper
+import json
+import base64
 
 class SerializerBase(serializers.Serializer):
     def __init__(self, data, many=False):
@@ -17,6 +19,18 @@ class SerializerBase(serializers.Serializer):
         if self.__db is not None:
             self.__db.cleanup()
 
+# from https://www.reddit.com/r/django/comments/v2s3fv/django_rest_framework_with_base64_image/
+class Base64ImageField(serializers.ImageField):
+
+    def to_internal_value(self, data):
+        from django.core.files.base import ContentFile
+        import base64
+        import six
+        import uuid
+
+        if isinstance(data, six.string_types):
+            if 'data:' in data and ';base64,' in data:
+                header, data = data.split(';base64,')
 
 class VehicleSerializer(SerializerBase):
     vehicle_id = serializers.CharField(max_length=128)
@@ -39,6 +53,87 @@ class VehicleSerializer(SerializerBase):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
         return instance
+
+class NavigationModelSerializer(SerializerBase):
+    model_id = serializers.CharField(max_length=32)
+    model_type = serializers.CharField(max_length=32)
+    model_format = serializers.CharField(max_length=32)
+    additional_params = serializers.JSONField()
+    encoded_model = serializers.CharField()
+
+    def get_model (self, model_id, model_type, model_format):
+        query = ''.join([
+            "SELECT model_type, model_format, additional_params, file_location ",
+            " FROM nav.models ",
+            " WHERE model_id =  %s and model_type = %s and model_format = %s"
+        ])
+        params = (model_id, model_type, model_format)
+        nav_model = None
+
+        db = self.get_db()
+        db.get_cursor('q').execute(query,params)
+        row = db.get_cursor('q').fetchone()
+        if row is not None:
+            # read the specified file
+            model_file = row[3]
+            additional_params = row[2] # should contain mapping text file
+            with open(model_file, 'rb') as model_in:
+                file_contents = model_in.read()
+                encoded_model = base64.b64encode(file_contents).decode('utf-8')
+
+                nav_model = NavModel(
+                    model_id = model_id,
+                    model_type = model_type,
+                    model_format = model_format,
+                    encoded_model=encoded_model,
+                    additional_params={'object_mappings':self.__read_label_file(additional_params['mapping_file'])})
+        else:
+            logging.getLogger(__name__).warning(f"Model {model_id} Type {model_type} Format {model_format} Not found!")
+
+        db.close_cursor('q')
+        return nav_model
+    
+    def __read_label_file(self, file_path):
+        with open(file_path, 'r') as f:
+            lines = f.readlines()
+        ret = {}
+        line_count = 0
+        for line in lines:
+            pair = line.strip().split(maxsplit=1)
+            if len(pair) > 1:
+                ret[int(pair[0])] = pair[1].strip()
+            else:
+                ret[line_count] = pair[0].strip()
+            line_count += 1
+        return ret
+
+
+class NavigationMapSerializer(SerializerBase):
+    map_id = serializers.CharField(max_length=32)
+    content = serializers.JSONField()
+
+    def get_map (self, map_id):
+        query = ''.join([
+            "SELECT file_location ",
+            " FROM nav.maps ",
+            " WHERE map_id =  %s "
+        ])
+        params = (map_id,)
+        nav_map = None
+
+        db = self.get_db()
+        db.get_cursor('q').execute(query,params)
+        row = db.get_cursor('q').fetchone()
+        if row is not None:
+            # read the specified file
+            map_file = row[0]
+            with open(map_file) as map_in:
+                file_contents = map_in.read()
+                nav_map = NavMap(map_id = map_id, content=json.loads(file_contents))
+
+        db.close_cursor('q')
+        return nav_map
+
 
 class PositionLogEntrySerializer(SerializerBase):
     entry_num = serializers.IntegerField(required=False)

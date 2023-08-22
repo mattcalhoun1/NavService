@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS nav.vehicles (
 CREATE TABLE IF NOT EXISTS nav.maps (
     map_id VARCHAR(32),
     map_content jsonb,
+    file_location VARCHAR(128),
     PRIMARY KEY (map_id)
 );
 
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS nav.models (
     model_format VARCHAR(32), -- ex: tflite
     additional_params jsonb, -- ex: obj number / name mapping, etc
     encoded_model bytea, -- the actual tflite model binary
+    file_location VARCHAR(128),
     PRIMARY KEY (model_type, model_id, model_format)
 );
 

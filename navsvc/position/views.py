@@ -2,10 +2,53 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap
-from position.serializers import VehicleSerializer, PositionLogEntrySerializer
+from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel
+from position.serializers import VehicleSerializer, PositionLogEntrySerializer, NavigationMapSerializer, NavigationModelSerializer
 import logging
 from datetime import datetime
+
+@csrf_exempt
+def nav_map(request, map_id):
+    logging.getLogger(__name__).info(f"map {request.method}: {map_id}")
+
+    """
+    List all vehicles, or create a new vehicle.
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving map: {map_id}")
+        #vehicles = Vehicle.objects.all()
+        serializer = NavigationMapSerializer(data=None)
+        nav_map = serializer.get_map(map_id)
+        serializer.cleanup()
+        out_serializer = NavigationMapSerializer(data=nav_map)
+        out_serializer.is_valid()
+        if nav_map is not None:
+            return JsonResponse(nav_map.content, safe=False)
+    
+    return JsonResponse({}, safe=False)
+
+@csrf_exempt
+def recognition_model(request, model_id, model_type, model_format):
+    logging.getLogger(__name__).info(f"recognition_model {request.method}: {model_id}, {model_type}, {model_format}")
+
+    """
+    List all vehicles, or create a new vehicle.
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving model: {model_id}")
+        #vehicles = Vehicle.objects.all()
+        serializer = NavigationModelSerializer(data=None)
+        nav_model = serializer.get_model (model_id, model_type, model_format)
+        serializer.cleanup()
+        out_serializer = NavigationModelSerializer(data=nav_model)
+        out_serializer.is_valid()
+        return JsonResponse({
+            "model_type": nav_model.model_type,
+            'model_format': nav_model.model_format,
+            'additional_params': nav_model.additional_params,
+            "encoded_model": nav_model.encoded_model,
+        }, safe=False)
+
 
 @csrf_exempt
 def position_log(request, vehicle_id, session_id, start_time = None, end_time = None):
@@ -62,28 +105,3 @@ def vehicle_list(request):
         serializer.cleanup()
         return JsonResponse(serializer.errors, status=400)
     
-@csrf_exempt
-def vehicle_detail(request, pk):
-    """
-    Retrieve, update or delete a vehicle
-    """
-    try:
-        vehicle = Vehicle.objects.get(pk=pk)
-    except Vehicle.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = VehicleSerializer(vehicle)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = VehicleSerializer(vehicle, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        vehicle.delete()
-        return HttpResponse(status=204)
