@@ -144,6 +144,35 @@ class VehicleSerializer(SerializerBase):
     vehicle_id = serializers.CharField(max_length=128)
     name = serializers.CharField(max_length=128)
 
+    def get_all_vehicles (self, max_vehicles=10):
+        entries = []
+        query = ''.join([
+            "SELECT "
+            " distinct (top.vehicle_id) as vehicle_id, ",
+            " (SELECT MAX(l.occurred) from nav.position_log l where l.vehicle_id = top.vehicle_id) as latest "
+            " FROM nav.position_log top ",
+            " INNER JOIN nav.vehicles v ON v.vehicle_id = top.vehicle_id "
+            " ORDER BY latest desc ",
+            "LIMIT %s"
+        ])
+        params = (max_vehicles,)
+
+        db = self.get_db()
+        db.get_cursor('q').execute(query,params)
+        while True:
+            row = db.get_cursor('q').fetchone()
+            if row is None:
+                break   
+
+            entries.append({
+                "vehicle_id": row[0],
+                "last_activity": row[1]
+            })
+
+        db.close_cursor('q')
+        return entries
+
+
     def create(self, validated_data):
         """
         Create and return a new `Snippet` instance, given the validated data.

@@ -137,28 +137,16 @@ def position_log(request, vehicle_id, session_id, start_time = None, end_time = 
 
 
 @csrf_exempt
-def vehicle_list(request):
+def vehicles(request):
     """
     List all vehicles, or create a new vehicle.
     """
     if request.method == 'GET':
         #vehicles = Vehicle.objects.all()
-        vehicles = []
-        for i in range(10):
-            vehicles.append(Vehicle(vehicle_id=f"v{i}", name="another vehicle"))
-
-        serializer = VehicleSerializer(vehicles, many=True)
+        serializer = VehicleSerializer(None)
+        vehicles = serializer.get_all_vehicles()
         serializer.cleanup()
-        return JsonResponse(serializer.data, safe=False)
+        return JsonResponse(vehicles, safe=False)
 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = VehicleSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            serializer.cleanup()
-            return JsonResponse(serializer.data, status=201)
 
-        serializer.cleanup()
-        return JsonResponse(serializer.errors, status=400)
     
