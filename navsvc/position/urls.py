@@ -7,4 +7,6 @@ urlpatterns = [
     path('position_log/<str:vehicle_id>/<str:session_id>/', views.position_log),
     path('position_log/<str:vehicle_id>/<str:session_id>/<str:start_time>/', views.position_log),
     path('position_log/<str:vehicle_id>/<str:session_id>/<str:start_time>/<str:end_time>/', views.position_log),
+    path('position_views/<str:vehicle_id>/<str:session_id>/', views.position_views),
+    path('position_view/<str:vehicle_id>/<str:entry_num>/<str:camera_id>/', views.position_view),
 ]

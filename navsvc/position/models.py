@@ -46,10 +46,11 @@ class PositionLog(models.Model):
 
 class PositionView(models.Model):
     vehicle_id = models.CharField(max_length=32)
+    session_id = models.CharField(max_length=64)
     entry_num = models.IntegerField()
     camera_id = models.CharField(max_length=32)
     camera_angle = models.FloatField()
     image_format = models.CharField(max_length=4)
-    encoded_image = models.TextField()
+    encoded_image = models.CharField(max_length=102400000)
 
 

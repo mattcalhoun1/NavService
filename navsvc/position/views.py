@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel
-from position.serializers import VehicleSerializer, PositionLogEntrySerializer, NavigationMapSerializer, NavigationModelSerializer
+from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel, PositionView
+from position.serializers import VehicleSerializer, PositionLogEntrySerializer, PositionViewSerializer, NavigationMapSerializer, NavigationModelSerializer
 import logging
 from datetime import datetime
 
@@ -49,7 +49,49 @@ def recognition_model(request, model_id, model_type, model_format):
             "encoded_model": nav_model.encoded_model,
         }, safe=False)
 
+@csrf_exempt
+def position_views(request, vehicle_id, session_id):
+    logging.getLogger(__name__).info(f"position_views {request.method}: {vehicle_id}, {session_id}")
 
+    """
+    List all vehicles, or create a new vehicle.
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Searching for position views")
+        serializer = PositionViewSerializer(data=None)
+        pos_views = serializer.get_all_matching(vehicle_id=vehicle_id, session_id=session_id)
+        serializer.cleanup()
+        out_serializer = PositionViewSerializer(data=pos_views, many=True)
+        out_serializer.is_valid()
+        return JsonResponse(out_serializer.data, safe=False)
+    
+@csrf_exempt
+def position_view(request, vehicle_id, entry_num = None, camera_id = None):
+    logging.getLogger(__name__).info(f"position_view {request.method}: {vehicle_id}, {entry_num}, {camera_id}")
+
+    """
+    List all vehicles, or create a new vehicle.
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving image")
+        #vehicles = Vehicle.objects.all()
+        serializer = PositionViewSerializer(data=None)
+        pos_view = serializer.get_position_image(vehicle_id=vehicle_id, entry_num=entry_num, camera_id=camera_id)
+        serializer.cleanup()
+        return JsonResponse({
+            "image_format": 'png',
+            'encoded_image': pos_view
+        }, safe=False)
+    elif request.method == 'POST':
+        logging.getLogger(__name__).info(f"Saving image")
+        data = JSONParser().parse(request)
+        #vehicles = Vehicle.objects.all()
+        serializer = PositionViewSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            serializer.cleanup()
+            return JsonResponse({'result':'success'}, status=201)
+        
 @csrf_exempt
 def position_log(request, vehicle_id, session_id, start_time = None, end_time = None):
     logging.getLogger(__name__).info(f"position_log {request.method}: {request}")
