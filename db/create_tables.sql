@@ -1,0 +1,3 @@
+-- Create history table
+-- create images table
+-- create 'script' table
