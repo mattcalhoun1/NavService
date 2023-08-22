@@ -21,7 +21,7 @@ class NavModel(models.Model):
     encoded_model = models.TextField()
 
     class Meta:
-        ordering = ['map_id']
+        ordering = ['model_id']
 
 class Vehicle(models.Model):
     vehicle_id = models.CharField(max_length=32)

@@ -17,29 +17,22 @@ def position_log(request, vehicle_id, start_time = None, end_time = None):
     if request.method == 'GET':
         logging.getLogger(__name__).info(f"Retrieving position log, vehicle: {vehicle_id}, start time: {start_time}, end time: {end_time}")
         #vehicles = Vehicle.objects.all()
-        entries = []
-        for i in range(10):
-            entries.append(
-                PositionLogEntry(
-                    entry_num=i,
-                    vehicle_id=vehicle_id,
-                    occurred = datetime.now(),
-                    created = datetime.now(),
-                    position_x = i,
-                    position_y = 0,
-                    navmap_id = 'basement'
-                )
-            )
-
-        serializer = PositionLogEntrySerializer(entries, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        serializer = PositionLogEntrySerializer(data=None)
+        entries = serializer.get_all_matching(vehicle_id=vehicle_id, start_time=start_time, end_time=end_time)
+        serializer.cleanup()
+        out_serializer = PositionLogEntrySerializer(data=entries, many=True)
+        out_serializer.is_valid()
+        return JsonResponse(out_serializer.data, safe=False)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         serializer = PositionLogEntrySerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            serializer.cleanup()
             return JsonResponse(serializer.data, status=201)
+
+        serializer.cleanup()
         return JsonResponse(serializer.errors, status=400)
 
 
@@ -55,6 +48,7 @@ def vehicle_list(request):
             vehicles.append(Vehicle(vehicle_id=f"v{i}", name="another vehicle"))
 
         serializer = VehicleSerializer(vehicles, many=True)
+        serializer.cleanup()
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
@@ -62,7 +56,10 @@ def vehicle_list(request):
         serializer = VehicleSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            serializer.cleanup()
             return JsonResponse(serializer.data, status=201)
+
+        serializer.cleanup()
         return JsonResponse(serializer.errors, status=400)
     
 @csrf_exempt
