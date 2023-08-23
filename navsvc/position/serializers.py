@@ -123,7 +123,10 @@ class PositionViewSerializer(SerializerBase):
         sql = ''.join([
             "INSERT INTO nav.position_views ",
             " (vehicle_id, entry_num, session_id, camera_id, camera_angle, image_format, encoded_image) ",
-            " VALUES (%s, %s, %s, %s, %s, %s, %s) "
+            " VALUES (%s, %s, %s, %s, %s, %s, %s) ",
+            " ON CONFLICT (vehicle_id, entry_num, camera_id) ",
+            "   DO UPDATE SET encoded_image = EXCLUDED.encoded_image, camera_angle = EXCLUDED.camera_angle, ",
+            "   image_format = EXCLUDED.image_format "
         ])
         params = (
             position_view.vehicle_id,
@@ -132,7 +135,7 @@ class PositionViewSerializer(SerializerBase):
             position_view.camera_id,
             position_view.camera_angle,
             position_view.image_format,
-            position_view.encoded_image
+            base64.b64decode(position_view.encoded_image)
         )
 
         db = self.get_db()

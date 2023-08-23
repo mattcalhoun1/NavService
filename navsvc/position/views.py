@@ -80,6 +80,9 @@ def position_view(request, vehicle_id, entry_num = None, camera_id = None):
         serializer.cleanup()
         return JsonResponse({
             "image_format": 'png',
+            'vehicle_id':vehicle_id,
+            'entry_num': entry_num,
+            'camera_id':camera_id,
             'encoded_image': pos_view
         }, safe=False)
     elif request.method == 'POST':
