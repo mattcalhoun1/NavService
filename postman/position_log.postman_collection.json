@@ -12,7 +12,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/recent_sessions/car_1/",
+					"raw": "http://10.0.0.122:8000/recent_sessions/tank_1/",
 					"protocol": "http",
 					"host": [
 						"10",
@@ -23,7 +23,7 @@
 					"port": "8000",
 					"path": [
 						"recent_sessions",
-						"car_1",
+						"tank_1",
 						""
 					]
 				}
@@ -84,7 +84,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"session_id\": \"test-1\",\n    \"occurred\" : \"2023-08-22T08:01:00Z\",\n    \"vehicle_id\": \"car_1\",\n    \"created\" : \"2023-08-22T08:00:00Z\",\n    \"position_x\" : 2.0,\n    \"position_y\" : 1.5,\n    \"navmap_id\" : \"basement\"\n}\n",
+					"raw": "{\n    \"session_id\": \"tank-test-1\",\n    \"occurred\" : \"2023-08-22T14:01:00Z\",\n    \"vehicle_id\": \"tank_1\",\n    \"created\" : \"2023-08-22T14:00:00Z\",\n    \"position_x\" : -22.5,\n    \"position_y\" : 10.5,\n    \"navmap_id\" : \"basement\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -92,18 +92,19 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/position_log/car_1/",
+					"raw": "http://10.0.0.122:8000/position_log/tank_1/tank-test-1/",
 					"protocol": "http",
 					"host": [
-						"127",
+						"10",
 						"0",
 						"0",
-						"1"
+						"122"
 					],
 					"port": "8000",
 					"path": [
 						"position_log",
-						"car_1",
+						"tank_1",
+						"tank-test-1",
 						""
 					]
 				}
@@ -128,6 +129,29 @@
 					"path": [
 						"nav_map",
 						"basement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Maps",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://10.0.0.122:8000/nav_maps/",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"0",
+						"122"
+					],
+					"port": "8000",
+					"path": [
+						"nav_maps",
+						""
 					]
 				}
 			},
