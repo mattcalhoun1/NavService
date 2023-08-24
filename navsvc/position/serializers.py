@@ -207,13 +207,14 @@ class NavigationModelSerializer(SerializerBase):
             with open(model_file, 'rb') as model_in:
                 file_contents = model_in.read()
                 encoded_model = base64.b64encode(file_contents).decode('utf-8')
+                additional_params['object_mappings'] = self.__read_label_file(additional_params['mapping_file'])
 
                 nav_model = NavModel(
                     model_id = model_id,
                     model_type = model_type,
                     model_format = model_format,
                     encoded_model=encoded_model,
-                    additional_params={'object_mappings':self.__read_label_file(additional_params['mapping_file'])})
+                    additional_params=additional_params)
         else:
             logging.getLogger(__name__).warning(f"Model {model_id} Type {model_type} Format {model_format} Not found!")
 
