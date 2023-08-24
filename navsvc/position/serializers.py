@@ -19,19 +19,6 @@ class SerializerBase(serializers.Serializer):
         if self.__db is not None:
             self.__db.cleanup()
 
-# from https://www.reddit.com/r/django/comments/v2s3fv/django_rest_framework_with_base64_image/
-class Base64ImageField(serializers.ImageField):
-
-    def to_internal_value(self, data):
-        from django.core.files.base import ContentFile
-        import base64
-        import six
-        import uuid
-
-        if isinstance(data, six.string_types):
-            if 'data:' in data and ';base64,' in data:
-                header, data = data.split(';base64,')
-
 class PositionViewSerializer(SerializerBase):
     vehicle_id = serializers.CharField(required=True, allow_blank=False, max_length=32)
     entry_num = serializers.IntegerField(required=False)
