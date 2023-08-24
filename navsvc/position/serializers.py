@@ -154,7 +154,7 @@ class VehicleSerializer(SerializerBase):
             " distinct (top.vehicle_id) as vehicle_id, ",
             " (SELECT MAX(l.occurred) from nav.position_log l where l.vehicle_id = top.vehicle_id) as latest "
             " FROM nav.position_log top ",
-            " INNER JOIN nav.vehicles v ON v.vehicle_id = top.vehicle_id "
+            " INNER JOIN nav.vehicles v ON v.vehicle_id = top.vehicle_id and v.is_active = true "
             " ORDER BY latest desc ",
             "LIMIT %s"
         ])
@@ -251,6 +251,7 @@ class NavigationModelSerializer(SerializerBase):
 class NavigationMapSerializer(SerializerBase):
     map_id = serializers.CharField(max_length=32)
     content = serializers.JSONField()
+    map_desc = serializers.CharField(max_length=128)
 
     def get_map (self, map_id):
         query = ''.join([
@@ -274,6 +275,37 @@ class NavigationMapSerializer(SerializerBase):
         db.close_cursor('q')
         return nav_map
 
+    def get_maps (self):
+        query = ''.join([
+            "SELECT map_id, map_desc, file_location ",
+            " FROM nav.maps ",
+            " WHERE is_active = true"
+        ])
+        nav_maps = []
+
+        db = self.get_db()
+        db.get_cursor('q').execute(query)
+
+        while True:
+            row = db.get_cursor('q').fetchone()
+            if row is not None:
+                # read the specified file
+                map_id = row[0]
+                map_desc = row[1]
+                map_file = row[2]
+                nav_map = None
+                with open(map_file) as map_in:
+                    file_contents = map_in.read()
+                    nav_maps.append(
+                        NavMap(
+                            map_id = map_id, 
+                            content=json.loads(file_contents), 
+                            map_desc = map_desc))
+            else:
+                break
+
+        db.close_cursor('q')
+        return nav_maps
 
 class PositionLogEntrySerializer(SerializerBase):
     entry_num = serializers.IntegerField(required=False)

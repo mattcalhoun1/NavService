@@ -9,6 +9,7 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 class NavMap(models.Model):
     map_id = models.CharField(max_length=32)
     content = models.JSONField()
+    map_desc = models.CharField(max_length=128)
 
     class Meta:
         ordering = ['map_id']

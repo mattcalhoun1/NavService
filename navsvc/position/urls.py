@@ -2,6 +2,7 @@ from django.urls import path
 from position import views
 
 urlpatterns = [
+    path('nav_maps/', views.nav_maps),
     path('nav_map/<str:map_id>/', views.nav_map),
     path('recognition_model/<str:model_id>/<str:model_type>/<str:model_format>/', views.recognition_model),
     path('vehicles/', views.vehicles),

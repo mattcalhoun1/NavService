@@ -8,11 +8,29 @@ import logging
 from datetime import datetime
 
 @csrf_exempt
+def nav_maps(request):
+    logging.getLogger(__name__).info(f"maps {request.method}")
+
+    """
+    Get a all active maps
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving maps")
+        serializer = NavigationMapSerializer(data=None)
+        nav_maps = serializer.get_maps()
+        serializer.cleanup()
+        out_serializer = NavigationMapSerializer(data=nav_maps, many=True)
+        out_serializer.is_valid()
+        return JsonResponse(out_serializer.data, safe=False)
+    
+    return JsonResponse({}, safe=False)
+
+@csrf_exempt
 def nav_map(request, map_id):
     logging.getLogger(__name__).info(f"map {request.method}: {map_id}")
 
     """
-    List all vehicles, or create a new vehicle.
+    Get a specific map
     """
     if request.method == 'GET':
         logging.getLogger(__name__).info(f"Retrieving map: {map_id}")

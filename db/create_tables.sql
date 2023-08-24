@@ -8,8 +8,13 @@ CREATE SCHEMA IF NOT EXISTS nav;
 CREATE TABLE IF NOT EXISTS nav.vehicles (
     vehicle_id VARCHAR(32),
     vehicle_name VARCHAR(64),
+    is_active boolean,
     PRIMARY KEY (vehicle_id)
 );
+CREATE INDEX IF NOT EXISTS idx_veh_act ON nav.vehicles (
+    is_active
+);
+
 
 CREATE TABLE IF NOT EXISTS nav.maps (
     map_id VARCHAR(32),
