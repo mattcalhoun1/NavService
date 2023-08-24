@@ -82,7 +82,7 @@ class PositionViewSerializer(SerializerBase):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        logging.getLogger(__name__).info(f"Creating position log entry: {validated_data}")
+        #logging.getLogger(__name__).info(f"Creating position log entry: {validated_data}")
 
         #plog = PositionLogEntry.objects.create(**validated_data)
         position_view = PositionView()
