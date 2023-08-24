@@ -304,6 +304,7 @@ class PositionLogEntrySerializer(SerializerBase):
     position_x = serializers.FloatField(required=True)
     position_y = serializers.FloatField(required=True)
     navmap_id = serializers.CharField(required=True, allow_blank=False, max_length=32)
+    heading = serializers.FloatField(required=True)
 
     def get_recent_sessions (self, vehicle_id, max_sessions = 10):
         entries = []
@@ -336,7 +337,7 @@ class PositionLogEntrySerializer(SerializerBase):
     def get_all_matching (self, vehicle_id, session_id, start_time = None, end_time = None):
         entries = []
         query = ''.join([
-            "SELECT created, occurred, position_x, position_y, map_id, entry_num, session_id ",
+            "SELECT created, occurred, position_x, position_y, heading, map_id, entry_num, session_id ",
             " FROM nav.position_log ",
             " WHERE vehicle_id =  %s and session_id = %s "
         ])
@@ -363,9 +364,10 @@ class PositionLogEntrySerializer(SerializerBase):
                 occurred = row[1],
                 position_x = row[2],
                 position_y = row[3],
-                navmap_id = row[4],
-                entry_num = row[5],
-                session_id = row[6]
+                heading = row[4],
+                navmap_id = row[5],
+                entry_num = row[6],
+                session_id = row[7]
             ))
 
         db.close_cursor('q')
@@ -385,6 +387,7 @@ class PositionLogEntrySerializer(SerializerBase):
         plog.created = validated_data.get('created')
         plog.position_x = validated_data.get('position_x')
         plog.position_y = validated_data.get('position_y')
+        plog.heading = validated_data.get('heading')
         plog.navmap_id = validated_data.get('navmap_id')
         plog.session_id = validated_data.get('session_id')
 
@@ -402,8 +405,8 @@ class PositionLogEntrySerializer(SerializerBase):
         logging.getLogger(__name__).info(f"Saving position log to postgres for: {log_entry.vehicle_id}")
         
         sql = ''.join([
-            "INSERT INTO nav.position_log (vehicle_id, created, occurred, position_x, position_y, map_id, session_id) ",
-            " VALUES (%s, %s, %s, %s, %s, %s, %s) "
+            "INSERT INTO nav.position_log (vehicle_id, created, occurred, position_x, position_y, heading, map_id, session_id) ",
+            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
         ])
         params = (
             log_entry.vehicle_id,
@@ -411,6 +414,7 @@ class PositionLogEntrySerializer(SerializerBase):
             log_entry.occurred,
             log_entry.position_x,
             log_entry.position_y,
+            log_entry.heading,
             log_entry.navmap_id,
             log_entry.session_id
         )

@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS nav.position_log (
     occurred timestamp,
     position_x float,
     position_y float,
+    heading float,
     map_id VARCHAR(32),
     PRIMARY KEY (vehicle_id, entry_num),
     FOREIGN KEY (vehicle_id) REFERENCES nav.vehicles (vehicle_id),

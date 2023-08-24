@@ -34,6 +34,7 @@ class PositionLogEntry(models.Model):
     occurred = models.DateTimeField(auto_now_add=True)
     position_x = models.FloatField()
     position_y = models.FloatField()
+    heading = models.FloatField()
     navmap_id = models.CharField(max_length=32)
     vehicle_id = models.CharField(max_length=32)
     session_id = models.CharField(max_length=64)
