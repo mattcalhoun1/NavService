@@ -213,6 +213,7 @@ def assignment(request, vehicle_id, entry_num):
         return JsonResponse(out_serializer.data, safe=False)
 
     elif request.method == 'POST':
+        logging.getLogger(__name__).info(f"{request.body}")
         data = JSONParser().parse(request)
         serializer = AssignmentSerializer(data=data)
         if serializer.is_valid():
