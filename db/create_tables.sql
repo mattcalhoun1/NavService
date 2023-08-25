@@ -75,3 +75,17 @@ CREATE INDEX IF NOT EXISTS idx_pos_view_veh_entry ON nav.position_views (
     vehicle_id,
     entry_num
 );
+
+CREATE TABLE IF NOT EXISTS nav.assignments (
+    vehicle_id VARCHAR(32),
+    entry_num serial,
+    assignment jsonb,
+    complete boolean,
+    PRIMARY KEY (vehicle_id, entry_num),
+    FOREIGN KEY (vehicle_id) REFERENCES nav.vehicles (vehicle_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_assign_v_c ON nav.assignments (
+    vehicle_id,
+    complete
+);

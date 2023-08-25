@@ -6,6 +6,12 @@ LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
+class Assignment (models.Model):
+    complete = models.BooleanField()
+    vehicle_id = models.CharField(max_length=32)
+    entry_num = models.IntegerField()
+    assignment = models.JSONField()
+
 class NavMap(models.Model):
     map_id = models.CharField(max_length=32)
     content = models.JSONField()

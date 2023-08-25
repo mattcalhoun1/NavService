@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel, PositionView
-from position.serializers import VehicleSerializer, PositionLogEntrySerializer, PositionViewSerializer, NavigationMapSerializer, NavigationModelSerializer
+from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel, PositionView, Assignment
+from position.serializers import AssignmentSerializer, VehicleSerializer, PositionLogEntrySerializer, PositionViewSerializer, NavigationMapSerializer, NavigationModelSerializer
 import logging
 from datetime import datetime
 
@@ -169,5 +169,71 @@ def vehicles(request):
         serializer.cleanup()
         return JsonResponse(vehicles, safe=False)
 
+@csrf_exempt
+def assignments(request, vehicle_id):
+    logging.getLogger(__name__).info(f"assignments {request.method}: {request}")
 
+    """
+    Get assignments or update one
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving assignments, vehicle: {vehicle_id}")
+        serializer = AssignmentSerializer(data=None)
+        entries = serializer.get_incomplete(vehicle_id=vehicle_id)
+        serializer.cleanup()
+        out_serializer = AssignmentSerializer(data=entries, many=True)
+        out_serializer.is_valid()
+        return JsonResponse(out_serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = PositionLogEntrySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            serializer.cleanup()
+            return JsonResponse(serializer.data, status=201)
+
+        serializer.cleanup()
+        return JsonResponse(serializer.errors, status=400)
     
+@csrf_exempt
+def assignment(request, vehicle_id, entry_num):
+    logging.getLogger(__name__).info(f"assignment {request.method}: {request}")
+
+    """
+    Get assignments or update one
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving assignment, vehicle: {vehicle_id}, entry: {entry_num}")
+        serializer = AssignmentSerializer(data=None)
+        assn = serializer.get(vehicle_id=vehicle_id, entry_num=int(entry_num))
+        serializer.cleanup()
+        out_serializer = AssignmentSerializer(data=assn)
+        out_serializer.is_valid()
+        return JsonResponse(out_serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = AssignmentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            serializer.cleanup()
+            return JsonResponse(serializer.data, status=200)
+
+        serializer.cleanup()
+        return JsonResponse(serializer.errors, status=400)
+    
+@csrf_exempt
+def assignment_create(request, vehicle_id):
+    logging.getLogger(__name__).info(f"assignment create {request.method}: {request}")
+
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = AssignmentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            serializer.cleanup()
+            return JsonResponse(serializer.data, status=201)
+
+        serializer.cleanup()
+        return JsonResponse(serializer.errors, status=400)
