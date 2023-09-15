@@ -62,3 +62,10 @@ class PositionView(models.Model):
     encoded_image = models.CharField(max_length=102400000)
 
 
+class Lidar(models.Model):
+    vehicle_id = models.CharField(max_length=32)
+    session_id = models.CharField(max_length=64)
+    entry_num = models.IntegerField()
+    occurred = models.DateTimeField(auto_now_add=True)
+    lidar_data = models.JSONField()
+    ordering = ['occurred']

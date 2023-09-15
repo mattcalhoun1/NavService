@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from position.models import Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel, PositionView, Assignment
-from position.serializers import AssignmentSerializer, VehicleSerializer, PositionLogEntrySerializer, PositionViewSerializer, NavigationMapSerializer, NavigationModelSerializer
+from position.models import Lidar,Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel, PositionView, Assignment
+from position.serializers import LidarSerializer,AssignmentSerializer, VehicleSerializer, PositionLogEntrySerializer, PositionViewSerializer, NavigationMapSerializer, NavigationModelSerializer
 import logging
 from datetime import datetime
 
@@ -109,6 +109,50 @@ def position_view(request, vehicle_id, entry_num = None, camera_id = None):
         #vehicles = Vehicle.objects.all()
         serializer = PositionViewSerializer(data=data)
         if serializer.is_valid():
+            serializer.save()
+            serializer.cleanup()
+            return JsonResponse({'result':'success'}, status=201)
+
+@csrf_exempt
+def lidar_entries(request, vehicle_id, session_id):
+    logging.getLogger(__name__).info(f"position_views {request.method}: {vehicle_id}, {session_id}")
+    """
+    List all lidar entries for the given session.
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Searching for lidar entries")
+        serializer = LidarSerializer(data=None)
+        lidar_views = serializer.get_all_matching(vehicle_id=vehicle_id, session_id=session_id)
+        serializer.cleanup()
+        out_serializer = LidarSerializer(data=lidar_views, many=True)
+        out_serializer.is_valid()
+        return JsonResponse(out_serializer.data, safe=False)
+    
+@csrf_exempt
+def lidar(request, vehicle_id, session_id, entry_num = None):
+    logging.getLogger(__name__).info(f"lidar {request.method}: {vehicle_id}, {entry_num}")
+
+    """
+    List all vehicles, or create a new vehicle.
+    """
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving lidar")
+        #vehicles = Vehicle.objects.all()
+        serializer = LidarSerializer(data=None)
+        lidar_entry = serializer.get_lidar_data(vehicle_id=vehicle_id, entry_num=entry_num)
+        serializer.cleanup()
+        return JsonResponse({
+            'session_id':lidar_entry.session_id,
+            'vehicle_id':lidar_entry.vehicle_id,
+            'occurred':lidar_entry.occurred,
+            'lidar_data':lidar_entry.lidar_data
+        }, safe=False)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        logging.getLogger(__name__).info(f"Saving lidar: {data}")
+        serializer = LidarSerializer(data=data)
+        if serializer.is_valid():
+            logging.getLogger(__name__).info("data is valid")
             serializer.save()
             serializer.cleanup()
             return JsonResponse({'result':'success'}, status=201)
