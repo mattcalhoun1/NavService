@@ -18,4 +18,6 @@ urlpatterns = [
     path('lidar_entries/<str:vehicle_id>/<str:session_id>/', views.lidar_entries),
     path('lidar/<str:vehicle_id>/<str:session_id>/<str:entry_num>/', views.lidar),
     path('lidar/<str:vehicle_id>/<str:session_id>/', views.lidar),
+    path('shutdown/', views.shutdown),
+
 ]

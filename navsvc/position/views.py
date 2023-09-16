@@ -6,6 +6,15 @@ from position.models import Lidar,Vehicle, PositionLog, PositionLogEntry, NavMap
 from position.serializers import LidarSerializer,AssignmentSerializer, VehicleSerializer, PositionLogEntrySerializer, PositionViewSerializer, NavigationMapSerializer, NavigationModelSerializer
 import logging
 from datetime import datetime
+from subprocess import call
+
+@csrf_exempt
+def shutdown(request):
+    logging.getLogger(__name__).info(f"shutdown {request.method}")
+    call("shutdown", shell=False)
+    exit(0) # the return probably never gets called
+    
+    return JsonResponse({"result":"shutting down now"}, safe=False)
 
 @csrf_exempt
 def nav_maps(request):
