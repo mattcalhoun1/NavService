@@ -11,7 +11,7 @@ import os
 @csrf_exempt
 def shutdown(request):
     logging.getLogger(__name__).info(f"shutdown {request.method}")
-    os.system('systemctl poweroff')
+    os.system('/usr/bin/sudo /usr/sbin/poweroff')
     return JsonResponse({"result":"shutting down now"}, safe=False)
 
 @csrf_exempt
