@@ -63,9 +63,9 @@
     },
     "shape":"rectangle",
     "boundaries" : {
-        "xmin":-50,
+        "xmin":-150,
         "ymin":-150,
-        "xmax":100,
-        "ymax":0
+        "xmax":200,
+        "ymax":200
     }
 }
