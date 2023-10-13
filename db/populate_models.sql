@@ -9,8 +9,8 @@ VALUES (
     'basement',
     'object_detection',
     'tflite',
-    '{"mapping_file":"/home/matt/projects/Robotics/NavigationModels/FinishedModels/basement.txt","object_type":"basic","resolution_w":640,"resolution_h":640}',
-    '/home/matt/projects/Robotics/NavigationModels/FinishedModels/basement.tflite'
+    '{"mapping_file":"/home/matt/projects/Robotics/NavigationModels/basement.txt","object_type":"basic","resolution_w":640,"resolution_h":640}',
+    '/home/matt/projects/Robotics/NavigationModels/basement.tflite'
 ) 
 ON CONFLICT (model_id, model_type, model_format) 
 DO UPDATE set
@@ -29,8 +29,8 @@ VALUES (
     'lights',
     'object_detection',
     'tflite',
-    '{"mapping_file":"/home/matt/projects/Robotics/NavigationModels/FinishedModels/lights.txt","object_type":"emitter","resolution_w":640,"resolution_h":640}',
-    '/home/matt/projects/Robotics/NavigationModels/FinishedModels/lights_640.tflite'
+    '{"mapping_file":"/home/matt/projects/Robotics/NavigationModels/lights.txt","object_type":"emitter","resolution_w":640,"resolution_h":640}',
+    '/home/matt/projects/Robotics/NavigationModels/lights_640.tflite'
 ) 
 ON CONFLICT (model_id, model_type, model_format) 
 DO UPDATE set
