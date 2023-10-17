@@ -61,7 +61,6 @@ class PositionView(models.Model):
     image_format = models.CharField(max_length=4)
     encoded_image = models.CharField(max_length=102400000)
 
-
 class Lidar(models.Model):
     vehicle_id = models.CharField(max_length=32)
     session_id = models.CharField(max_length=64)
@@ -69,3 +68,24 @@ class Lidar(models.Model):
     occurred = models.DateTimeField(auto_now_add=True)
     lidar_data = models.JSONField()
     ordering = ['occurred']
+
+class SearchHit(models.Model):
+    object_type = models.CharField(max_length=32)
+    map_id = models.CharField(max_length=32)
+    entry_num = models.IntegerField()
+    occurred = models.DateTimeField()
+    est_visual_dist = models.FloatField()
+    est_lidar_dist = models.FloatField()
+    vehicle_relative_heading = models.FloatField()
+    est_x = models.FloatField()
+    est_y = models.FloatField()
+    vehicle_x = models.FloatField()
+    vehicle_y = models.FloatField()
+    vehicle_heading = models.FloatField()
+    confidence = models.FloatField()
+    vehicle_id = models.CharField(max_length=32)
+    session_id = models.CharField(max_length=64)
+    camera_id = models.CharField(max_length=32)
+    camera_angle = models.FloatField()
+    image_format = models.CharField(max_length=4)
+    encoded_image = models.CharField(max_length=102400000)

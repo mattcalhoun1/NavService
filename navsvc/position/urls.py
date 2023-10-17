@@ -18,6 +18,9 @@ urlpatterns = [
     path('lidar_entries/<str:vehicle_id>/<str:session_id>/', views.lidar_entries),
     path('lidar/<str:vehicle_id>/<str:session_id>/<str:entry_num>/', views.lidar),
     path('lidar/<str:vehicle_id>/<str:session_id>/', views.lidar),
+    path('search_hits/<str:vehicle_id>/<str:session_id>/', views.search_hits),
+    path('new_search_hit/<str:vehicle_id>/<str:session_id>/', views.new_search_hit),
+    path('search_hit/<str:object_type>/<str:map_id>/<str:entry_num>/', views.search_hit_image),
     path('shutdown/', views.shutdown),
 
 ]

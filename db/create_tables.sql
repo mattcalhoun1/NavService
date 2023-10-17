@@ -108,3 +108,38 @@ CREATE INDEX IF NOT EXISTS idx_lidar_veh_sess ON nav.lidar (
     vehicle_id,
     session_id
 );
+
+CREATE TABLE IF NOT EXISTS nav.search_hits (
+    object_type VARCHAR(32), -- type identifier (ex: gazing_ball)
+    map_id VARCHAR(32), -- map on which the search occurred
+    entry_num serial, 
+    occurred timestamp DEFAULT now(),
+    est_visual_distance float, -- visual estimated distance (in)
+    est_lidar_dist float, -- if lidar measuremnt taken, mm distance from lidar
+    vehicle_relative_heading float, -- where the object appears relative to the vehicle
+    est_x float, -- estimated map x position of the object
+    est_y float, -- estimated map y position of the object
+    vehicle_x float, -- vehicle x position at the time of sighting
+    vehicle_y float, -- vehicle x position at the time of sighting
+    vehicle_heading float, -- vehicle heading at the time of sighting
+    confidence float, -- confidence 0 - 1.0 of the match
+    vehicle_id VARCHAR(32), -- vehicle that took the measurment
+    camera_id VARCHAR(32), -- ex: left, etc
+    session_id VARCHAR(64), -- session in which the sighting occurred
+    camera_angle float, -- 0 = front of vehicle, +90 directly left, etc
+    image_format VARCHAR(4), -- ex: png
+    encoded_image bytea, -- the actual jpeg/png/etc bytes
+    PRIMARY KEY (object_type, map_id, entry_num),
+    FOREIGN KEY (map_id) REFERENCES nav.maps (map_id),    
+    FOREIGN KEY (vehicle_id) REFERENCES nav.vehicles (vehicle_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_search_hits_veh_sess ON nav.search_hits (
+    vehicle_id,
+    session_id
+);
+
+CREATE INDEX IF NOT EXISTS idx_search_hits_obj_map ON nav.search_hits (
+    object_type,
+    map_id
+);

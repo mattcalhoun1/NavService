@@ -3,7 +3,14 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from position.models import Lidar,Vehicle, PositionLog, PositionLogEntry, NavMap, NavModel, PositionView, Assignment
-from position.serializers import LidarSerializer,AssignmentSerializer, VehicleSerializer, PositionLogEntrySerializer, PositionViewSerializer, NavigationMapSerializer, NavigationModelSerializer
+from position.serializers.lidar_serializer import LidarSerializer
+from position.serializers.assignment_serializer import AssignmentSerializer
+from position.serializers.vehicle_serializer import VehicleSerializer
+from position.serializers.position_log_entry_serializer import PositionLogEntrySerializer
+from position.serializers.position_view_serializer import PositionViewSerializer
+from position.serializers.navigation_map_serializer import NavigationMapSerializer
+from position.serializers.navigation_model_serializer import NavigationModelSerializer
+from position.serializers.search_hits_serializer import SearchHitsSerializer
 import logging
 from datetime import datetime
 import os
@@ -56,9 +63,6 @@ def nav_map(request, map_id):
 def recognition_model(request, model_id, model_type, model_format):
     logging.getLogger(__name__).info(f"recognition_model {request.method}: {model_id}, {model_type}, {model_format}")
 
-    """
-    List all vehicles, or create a new vehicle.
-    """
     if request.method == 'GET':
         logging.getLogger(__name__).info(f"Retrieving model: {model_id}")
         #vehicles = Vehicle.objects.all()
@@ -75,12 +79,53 @@ def recognition_model(request, model_id, model_type, model_format):
         }, safe=False)
 
 @csrf_exempt
+def search_hits(request, vehicle_id, session_id):
+    logging.getLogger(__name__).info(f"position_views {request.method}: {vehicle_id}, {session_id}")
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Getting search hits")
+        serializer = SearchHitsSerializer(data=None)
+        hits = serializer.get_all_matching(vehicle_id=vehicle_id, session_id=session_id)
+        serializer.cleanup()
+        out_serializer = SearchHitsSerializer(data=hits, many=True)
+        out_serializer.is_valid()
+        return JsonResponse(out_serializer.data, safe=False)
+
+@csrf_exempt
+def new_search_hit(request, vehicle_id, session_id):
+    logging.getLogger(__name__).info(f"position_views {request.method}: {vehicle_id}, {session_id}")
+    if request.method == 'POST':
+        logging.getLogger(__name__).info(f"Saving search hit")
+        data = JSONParser().parse(request)
+        serializer = SearchHitsSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            serializer.cleanup()
+            return JsonResponse({'result':'success'}, status=201)
+        else:
+            logging.getLogger(__name__).info(f"data NOT valid: {serializer.errors}")
+            JsonResponse({'result':'fail', 'reason':'invalid data'}, status=400) 
+    return JsonResponse({'result':'fail'}, status=500)
+        
+@csrf_exempt
+def search_hit_image(request, object_type, map_id, entry_num):
+    logging.getLogger(__name__).info(f"search_hit {request.method}: {object_type}, {map_id}, {entry_num}")
+
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving image")
+        serializer = SearchHitsSerializer(data=None)
+        search_img = serializer.get_search_image(object_type=object_type, map_id=map_id, entry_num=entry_num)
+        serializer.cleanup()
+        return JsonResponse({
+            "image_format": 'png',
+            'object_type':object_type,
+            'entry_num': entry_num,
+            'map_id':map_id,
+            'encoded_image': search_img
+        }, safe=False)
+
+@csrf_exempt
 def position_views(request, vehicle_id, session_id):
     logging.getLogger(__name__).info(f"position_views {request.method}: {vehicle_id}, {session_id}")
-
-    """
-    List all vehicles, or create a new vehicle.
-    """
     if request.method == 'GET':
         logging.getLogger(__name__).info(f"Searching for position views")
         serializer = PositionViewSerializer(data=None)
@@ -93,10 +138,6 @@ def position_views(request, vehicle_id, session_id):
 @csrf_exempt
 def position_view(request, vehicle_id, entry_num = None, camera_id = None):
     logging.getLogger(__name__).info(f"position_view {request.method}: {vehicle_id}, {entry_num}, {camera_id}")
-
-    """
-    List all vehicles, or create a new vehicle.
-    """
     if request.method == 'GET':
         logging.getLogger(__name__).info(f"Retrieving image")
         #vehicles = Vehicle.objects.all()
