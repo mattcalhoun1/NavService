@@ -8,7 +8,8 @@
             "y":0,
             "height":12.0,
             "altitude":6.0,
-            "confidence":0.6
+            "confidence":0.6,
+            "lidar_visible":true
 	},
         "ne_tree": {
             "pattern":"na",
@@ -18,7 +19,8 @@
             "y":100,
             "height":24.5,
             "altitude":12.25,
-            "confidence":0.6
+            "confidence":0.6,
+            "lidar_visible":true
         },
 	"n_pineapple": {
             "pattern":"na",
@@ -28,7 +30,8 @@
             "y":132,
             "height":14.0,
             "altitude":7.0,
-            "confidence":0.6
+            "confidence":0.6,
+            "lidar_visible":true
 	},   
         "nw_house": {
             "pattern":"na",
@@ -38,7 +41,8 @@
             "y":65,
             "height":7.75,
             "altitude":3.875,
-            "confidence":0.6
+            "confidence":0.6,
+            "lidar_visible":true
         },
         "e_light": {
             "pattern":"2",
@@ -48,7 +52,8 @@
             "y":-28,
             "height":11,
             "altitude":29,
-            "confidence":0.25
+            "confidence":0.25,
+            "lidar_visible":true
         },
         "nw_light": {
             "pattern":"4",
@@ -58,7 +63,8 @@
             "y":130,
             "height":42,
             "altitude":21,
-            "confidence":0.25
+            "confidence":0.25,
+            "lidar_visible":true
         }
     },
     "shape":"rectangle",
@@ -69,11 +75,12 @@
         "ymax":200
     },
     "search": {
-	"gazing_ball": {
-            "pattern":"na",
-            "model":"basement",
-            "height":12.0,
-            "confidence":0.6
-	}
+        "gazing_ball": {
+                "pattern":"na",
+                "model":"basement",
+                "height":12.0,
+                "confidence":0.6,
+                "lidar_visible":true
+        }
     }
 }
