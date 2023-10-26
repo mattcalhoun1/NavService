@@ -20,15 +20,13 @@ class PositionLogEntrySerializer(SerializerBase):
     def get_recent_sessions (self, vehicle_id, max_sessions = 10):
         entries = []
         query = ''.join([
-            "SELECT "
-            " distinct (session_id) as session_id, ",
-            " (SELECT MAX(occurred) from nav.position_log l where l.vehicle_id = %s and l.session_id = session_id) as latest "
-            " FROM nav.position_log ",
-            " WHERE vehicle_id = %s "
-            " ORDER BY latest desc ",
-            "LIMIT %s"
+            " select session_id, max(occurred) as latest from nav.position_log ",
+            " where vehicle_id = %s ",
+            " group by session_id ",
+            " order by latest desc ",
+            "limit %s"
         ])
-        params = (vehicle_id, vehicle_id, max_sessions)
+        params = (vehicle_id, max_sessions)
 
         db = self.get_db()
         db.get_cursor('q').execute(query,params)
