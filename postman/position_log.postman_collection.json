@@ -12,18 +12,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/recent_sessions/tank_1/",
+					"raw": "http://{{nav_svc_ip}}/recent_sessions/MecCar/",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"recent_sessions",
-						"tank_1",
+						"MecCar",
 						""
 					]
 				}
@@ -36,17 +32,34 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/vehicles/",
+					"raw": "http://{{nav_svc_ip}}/vehicles/",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"vehicles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Session SearchHits",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{nav_svc_ip}}/search_hits/MecCar/2023-10-17/",
+					"protocol": "http",
+					"host": [
+						"{{nav_svc_ip}}"
+					],
+					"path": [
+						"search_hits",
+						"MecCar",
+						"2023-10-17",
 						""
 					]
 				}
@@ -59,19 +72,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/position_log/car_1/test-1",
+					"raw": "http://{{nav_svc_ip}}/position_log/MecCar/First",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"position_log",
-						"car_1",
-						"test-1"
+						"MecCar",
+						"First"
 					]
 				}
 			},
@@ -84,7 +93,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"session_id\": \"tank-test-1\",\n    \"occurred\" : \"2023-08-22T14:01:00Z\",\n    \"vehicle_id\": \"tank_1\",\n    \"created\" : \"2023-08-22T14:00:00Z\",\n    \"position_x\" : -22.5,\n    \"position_y\" : 10.5,\n    \"navmap_id\" : \"basement\"\n}\n",
+					"raw": "{\n    \"session_id\": \"manual-test\",\n    \"occurred\" : \"2023-09-16T14:01:00Z\",\n    \"vehicle_id\": \"Tank\",\n    \"created\" : \"2023-09-16T14:00:00Z\",\n    \"position_x\" : -22.5,\n    \"position_y\" : 10.5,\n    \"heading\": 4.0,\n    \"navmap_id\" : \"basement\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -92,19 +101,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://10.0.0.122:8000/position_log/tank_1/tank-test-1/",
+					"raw": "http://{{nav_svc_ip}}/position_log/Tank/manual-test/",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"position_log",
-						"tank_1",
-						"tank-test-1",
+						"Tank",
+						"manual-test",
 						""
 					]
 				}
@@ -117,15 +122,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/nav_map/basement",
+					"raw": "http://{{nav_svc_ip}}/nav_map/basement",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"nav_map",
 						"basement"
@@ -140,17 +141,32 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/nav_maps/",
+					"raw": "http://{{nav_svc_ip}}/nav_maps/",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"nav_maps",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shutdown",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{nav_svc_ip}}/shutdown/",
+					"protocol": "http",
+					"host": [
+						"{{nav_svc_ip}}"
+					],
+					"path": [
+						"shutdown",
 						""
 					]
 				}
@@ -163,18 +179,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/recognition_model/basement/object_detection/tflite",
+					"raw": "http://{{nav_svc_ip}}/recognition_model/lights/object_detection/tflite",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"recognition_model",
-						"basement",
+						"lights",
 						"object_detection",
 						"tflite"
 					]
@@ -188,19 +200,16 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/position_views/car_1/test-1",
+					"raw": "http://{{nav_svc_ip}}/position_views/MecCar/2023-10-27/",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"position_views",
-						"car_1",
-						"test-1"
+						"MecCar",
+						"2023-10-27",
+						""
 					]
 				}
 			},
@@ -221,15 +230,11 @@
 					}
 				},
 				"url": {
-					"raw": "http://10.0.0.122:8000/position_view/car_1/1/left/",
+					"raw": "http://{{nav_svc_ip}}/position_view/car_1/1/left/",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"position_view",
 						"car_1",
@@ -247,15 +252,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://10.0.0.122:8000/position_view/car_1/1/left/",
+					"raw": "http://{{nav_svc_ip}}/position_view/car_1/1/left/",
 					"protocol": "http",
 					"host": [
-						"10",
-						"0",
-						"0",
-						"122"
+						"{{nav_svc_ip}}"
 					],
-					"port": "8000",
 					"path": [
 						"position_view",
 						"car_1",
@@ -266,6 +267,164 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get Assignments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{nav_svc_ip}}/assignments/MecCar/",
+					"protocol": "http",
+					"host": [
+						"{{nav_svc_ip}}"
+					],
+					"path": [
+						"assignments",
+						"MecCar",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Assignment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"vehicle_id\":\"Tank\",\n    \"assignment\": {\n        \"Map\":\"basement\",\n        \"Steps\": [\n            {\"Command\":\"GO\", \"Params\": {\"X\":123.4,\"Y\":0.0}},\n            {\"Command\":\"GO\", \"Params\": {\"X\":0.0,\"Y\":0.0}}\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{nav_svc_ip}}/assignment_create/Tank/",
+					"protocol": "http",
+					"host": [
+						"{{nav_svc_ip}}"
+					],
+					"path": [
+						"assignment_create",
+						"Tank",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Complete Assignment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"vehicle_id\":\"Tank\",\n    \"entry_num\": 1,\n    \"complete\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{nav_svc_ip}}/assignment/Tank/1/",
+					"protocol": "http",
+					"host": [
+						"{{nav_svc_ip}}"
+					],
+					"path": [
+						"assignment",
+						"Tank",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lidar Metadata",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{nav_svc_ip}}/lidar_entries/MecCar/2023-10-27/",
+					"protocol": "http",
+					"host": [
+						"{{nav_svc_ip}}"
+					],
+					"path": [
+						"lidar_entries",
+						"MecCar",
+						"2023-10-27",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Lidar Entry",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"session_id\": \"test-1\",\n    \"vehicle_id\": \"car_1\",\n    \"occurred\" : \"2023-08-22T14:01:00Z\",\n    \"lidar_data\": {\n        \"0.25\":123,\n        \"1.23\":456,\n        \"359.5\":22.3\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{nav_svc_ip}}/lidar/car_1/test-1/",
+					"protocol": "http",
+					"host": [
+						"{{nav_svc_ip}}"
+					],
+					"path": [
+						"lidar",
+						"car_1",
+						"test-1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get lidar entry",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://1{{nav_svc_ip}}/lidar/car_1/test-1/4/",
+					"protocol": "http",
+					"host": [
+						"1{{nav_svc_ip}}"
+					],
+					"path": [
+						"lidar",
+						"car_1",
+						"test-1",
+						"4",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "nav_svc_ip",
+			"value": "10.0.0.199:8000"
 		}
 	]
 }
