@@ -1,0 +1,7 @@
+cone
+house
+gazing_ball
+pineapple
+cat_tree
+windmill
+speaker
