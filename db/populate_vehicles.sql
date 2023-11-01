@@ -33,7 +33,7 @@ INSERT INTO nav.vehicles (
 VALUES (
     'Tank',
     'Red Tank',
-    true
+    false
 )
 ON CONFLICT (vehicle_id) DO UPDATE 
 set 
@@ -54,6 +54,19 @@ set
     vehicle_name = EXCLUDED.vehicle_name, 
     is_active = EXCLUDED.is_active;
 
+INSERT INTO nav.vehicles (
+    vehicle_id,
+    vehicle_name,
+    is_active)
+VALUES (
+    'Observer',
+    'Observer',
+    true
+)
+ON CONFLICT (vehicle_id) DO UPDATE
+set
+    vehicle_name = EXCLUDED.vehicle_name,
+    is_active = EXCLUDED.is_active;
 
 --- Adding an entry so it shows up in app
 /*insert into nav.position_log (
@@ -66,7 +79,7 @@ set
   heading,
   map_id
 ) VALUES (
-  'MecCar',
+  'Observer',
   'First',
   now(),
   now(),
