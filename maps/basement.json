@@ -1,6 +1,6 @@
 {
     "landmarks": {
-	"w_windmill": {
+        "w_windmill": {
             "pattern":"na",
             "type":"windmill",
             "model":"basement",
@@ -11,7 +11,7 @@
             "confidence":0.6,
             "lidar_visible":true,
             "priority":6
-	},
+        },
         "ne_tree": {
             "pattern":"na",
             "type":"cat_tree",
@@ -24,7 +24,7 @@
             "lidar_visible":true,
             "priority":7
         },
-	"se_pineapple": {
+        "se_pineapple": {
             "pattern":"na",
             "type":"pineapple",
             "model":"basement",
@@ -35,7 +35,7 @@
             "confidence":0.6,
             "lidar_visible":true,
             "priority":2
-	},   
+        },   
         "nw_house": {
             "pattern":"na",
             "type":"house",
@@ -49,25 +49,25 @@
             "priority":1
         },
         "sw_light": {
-            "pattern":"8",
+            "pattern":"sideways_triangle",
             "type":"light",
             "model":"lights",
             "x":-136,
             "y":-80,
-            "height":43,
-            "altitude":39,
+            "height":15.5,
+            "altitude":25.5,
             "confidence":0.25,
             "lidar_visible":true,
             "priority":8
         },	
         "nw_light": {
-            "pattern":"2",
+            "pattern":"square",
             "type":"light",
             "model":"lights",
             "x":-155,
             "y":159,
-            "height":25,
-            "altitude":34.5,
+            "height":16,
+            "altitude":30,
             "confidence":0.25,
             "lidar_visible":true,
             "priority":9
@@ -169,7 +169,6 @@
                 "height":8.5,
                 "confidence":0.6,
                 "lidar_visible":false
-        }
-
+        }    
     }
 }
