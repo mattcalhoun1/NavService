@@ -78,8 +78,8 @@
             "model":"lights",
             "x":-65,
             "y":287,
-            "height":33,
-            "altitude":50.5,
+            "height":29,
+            "altitude":36.5,
             "confidence":0.25,
             "lidar_visible":true,
             "priority":10
