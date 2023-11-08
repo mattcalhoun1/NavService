@@ -3,6 +3,7 @@ from helpers.postgres_helper import PostgresHelper
 import json
 import base64
 import os
+import sys
 
 # this script exports all position images from a give session
 class SessionExporter:
@@ -10,8 +11,8 @@ class SessionExporter:
         self.__db = None
 
     def export_session (self, vehicle_id, session_id, out_dir):
-        if not os.path.exists(f"{out_dir}/{session_id}"):
-            os.makedirs(f"{out_dir}/{session_id}")
+        if not os.path.exists(f"{out_dir}/{vehicle_id}_{session_id}"):
+            os.makedirs(f"{out_dir}/{vehicle_id}_{session_id}")
 
         matches = self.get_all_matching_images(vehicle_id=vehicle_id, session_id=session_id)
         for m in matches:
@@ -19,7 +20,7 @@ class SessionExporter:
                 vehicle_id=vehicle_id,
                 entry_num = m['entry_num'],
                 camera_id=m['camera_id'],
-                file_name=f"{out_dir}/{session_id}/{m['entry_num']}_{m['camera_id']}_{m['camera_angle']}.{m['image_format']}")
+                file_name=f"{out_dir}/{vehicle_id}_{session_id}/{m['entry_num']}_{m['camera_id']}_{m['camera_angle']}.{m['image_format']}")
         self.cleanup()
 
     def get_all_matching_images (self, vehicle_id, session_id):
@@ -84,9 +85,15 @@ class SessionExporter:
             self.__db = None
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        raise ValueError('Please provide vehicle id and session id (two params, unnamed).')
+    
+    vid = sys.argv[1]
+    session = sys.argv[2]
+ 
     exporter = SessionExporter()
     exporter.export_session(
-        vehicle_id='MecCar',
-        session_id = '2023-11-08',
+        vehicle_id=vid,
+        session_id=session,
         out_dir='/home/matt/projects/LVPS_Tests'
     )
