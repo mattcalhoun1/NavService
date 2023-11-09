@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS nav.position_log (
     position_y float,
     heading float,
     map_id VARCHAR(32),
+    basis jsonb, -- data that went into the calculations
     PRIMARY KEY (vehicle_id, entry_num),
     FOREIGN KEY (vehicle_id) REFERENCES nav.vehicles (vehicle_id),
     FOREIGN KEY (map_id) REFERENCES nav.maps (map_id)

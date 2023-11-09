@@ -44,6 +44,7 @@ class PositionLogEntry(models.Model):
     navmap_id = models.CharField(max_length=32)
     vehicle_id = models.CharField(max_length=32)
     session_id = models.CharField(max_length=64)
+    basis = models.JSONField()
     ordering = ['occurred']
 
 class PositionLog(models.Model):

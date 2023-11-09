@@ -16,6 +16,8 @@ class PositionLogEntrySerializer(SerializerBase):
     position_y = serializers.FloatField(required=True)
     navmap_id = serializers.CharField(required=True, allow_blank=False, max_length=32)
     heading = serializers.FloatField(required=True)
+    basis = serializers.JSONField(required=False)
+
 
     def get_recent_sessions (self, vehicle_id, max_sessions = 10):
         entries = []
@@ -46,7 +48,7 @@ class PositionLogEntrySerializer(SerializerBase):
     def get_all_matching (self, vehicle_id, session_id, start_time = None, end_time = None):
         entries = []
         query = ''.join([
-            "SELECT created, occurred, position_x, position_y, heading, map_id, entry_num, session_id ",
+            "SELECT created, occurred, position_x, position_y, heading, map_id, entry_num, session_id, basis ",
             " FROM nav.position_log ",
             " WHERE vehicle_id =  %s and session_id = %s "
         ])
@@ -76,7 +78,8 @@ class PositionLogEntrySerializer(SerializerBase):
                 heading = row[4],
                 navmap_id = row[5],
                 entry_num = row[6],
-                session_id = row[7]
+                session_id = row[7],
+                basis = row[8]
             ))
 
         db.close_cursor('q')
@@ -99,6 +102,7 @@ class PositionLogEntrySerializer(SerializerBase):
         plog.heading = validated_data.get('heading')
         plog.navmap_id = validated_data.get('navmap_id')
         plog.session_id = validated_data.get('session_id')
+        plog.basis = validated_data.get('basis')
 
         self.__add_log_entry(log_entry=plog)
         return plog
@@ -114,8 +118,8 @@ class PositionLogEntrySerializer(SerializerBase):
         logging.getLogger(__name__).info(f"Saving position log to postgres for: {log_entry.vehicle_id}")
         
         sql = ''.join([
-            "INSERT INTO nav.position_log (vehicle_id, created, occurred, position_x, position_y, heading, map_id, session_id) ",
-            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
+            "INSERT INTO nav.position_log (vehicle_id, created, occurred, position_x, position_y, heading, map_id, session_id, basis) ",
+            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) "
         ])
         params = (
             log_entry.vehicle_id,
@@ -125,7 +129,8 @@ class PositionLogEntrySerializer(SerializerBase):
             log_entry.position_y,
             log_entry.heading,
             log_entry.navmap_id,
-            log_entry.session_id
+            log_entry.session_id,
+            log_entry.basis
         )
 
         db = self.get_db()
