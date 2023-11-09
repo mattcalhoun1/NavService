@@ -64,6 +64,25 @@ class PositionViewSerializer(SerializerBase):
         db.close_cursor('q')
         return encoded_image
 
+    def get_position_image_for_angle (self, vehicle_id, entry_num, camera_id, camera_angle):
+        entries = []
+        query = ''.join([
+            "SELECT encoded_image ",
+            " FROM nav.position_views ",
+            " WHERE vehicle_id =  %s and entry_num = %s and camera_id = %s and camera_angle = %s"
+        ])
+        params = (vehicle_id, entry_num, camera_id, camera_angle)
+
+        db = self.get_db()
+        db.get_cursor('q').execute(query,params)
+        row = db.get_cursor('q').fetchone()
+        encoded_image = None
+        if row is not None:
+            raw_image = row[0]
+            encoded_image = base64.b64encode(raw_image).decode('utf-8')
+
+        db.close_cursor('q')
+        return encoded_image
 
     def create(self, validated_data):
         """
@@ -98,8 +117,8 @@ class PositionViewSerializer(SerializerBase):
             "INSERT INTO nav.position_views ",
             " (vehicle_id, entry_num, session_id, camera_id, camera_angle, image_format, encoded_image) ",
             " VALUES (%s, %s, %s, %s, %s, %s, %s) ",
-            " ON CONFLICT (vehicle_id, entry_num, camera_id) ",
-            "   DO UPDATE SET encoded_image = EXCLUDED.encoded_image, camera_angle = EXCLUDED.camera_angle, ",
+            " ON CONFLICT (vehicle_id, entry_num, camera_id, camera_angle) ",
+            "   DO UPDATE SET encoded_image = EXCLUDED.encoded_image, ",
             "   image_format = EXCLUDED.image_format "
         ])
         params = (

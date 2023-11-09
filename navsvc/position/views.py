@@ -80,7 +80,7 @@ def recognition_model(request, model_id, model_type, model_format):
 
 @csrf_exempt
 def search_hits(request, vehicle_id, session_id):
-    logging.getLogger(__name__).info(f"position_views {request.method}: {vehicle_id}, {session_id}")
+    logging.getLogger(__name__).info(f"search_hits {request.method}: {vehicle_id}, {session_id}")
     if request.method == 'GET':
         logging.getLogger(__name__).info(f"Getting search hits")
         serializer = SearchHitsSerializer(data=None)
@@ -92,7 +92,7 @@ def search_hits(request, vehicle_id, session_id):
 
 @csrf_exempt
 def new_search_hit(request, vehicle_id, session_id):
-    logging.getLogger(__name__).info(f"position_views {request.method}: {vehicle_id}, {session_id}")
+    logging.getLogger(__name__).info(f"new_search_hit {request.method}: {vehicle_id}, {session_id}")
     if request.method == 'POST':
         logging.getLogger(__name__).info(f"Saving search hit")
         data = JSONParser().parse(request)
@@ -154,12 +154,32 @@ def position_view(request, vehicle_id, entry_num = None, camera_id = None):
     elif request.method == 'POST':
         logging.getLogger(__name__).info(f"Saving image")
         data = JSONParser().parse(request)
-        #vehicles = Vehicle.objects.all()
         serializer = PositionViewSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             serializer.cleanup()
             return JsonResponse({'result':'success'}, status=201)
+
+@csrf_exempt
+def position_view_angle(request, vehicle_id, entry_num = None, camera_id = None, camera_angle = None):
+    logging.getLogger(__name__).info(f"position_view_angle {request.method}: {vehicle_id}, {entry_num}, {camera_id}, {camera_angle}")
+    if request.method == 'GET':
+        logging.getLogger(__name__).info(f"Retrieving image")
+        serializer = PositionViewSerializer(data=None)
+        pos_view = serializer.get_position_image_for_angle(
+            vehicle_id=vehicle_id, 
+            entry_num=entry_num, 
+            camera_id=camera_id,
+            camera_angle=camera_angle)
+        serializer.cleanup()
+        return JsonResponse({
+            "image_format": 'png',
+            'vehicle_id':vehicle_id,
+            'entry_num': entry_num,
+            'camera_id':camera_id,
+            'camera_angle':camera_angle,
+            'encoded_image': pos_view
+        }, safe=False)
 
 @csrf_exempt
 def lidar_entries(request, vehicle_id, session_id):

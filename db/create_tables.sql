@@ -61,10 +61,10 @@ CREATE TABLE IF NOT EXISTS nav.position_views (
     entry_num int, 
     camera_id VARCHAR(32), -- ex: left, etc
     session_id VARCHAR(64),
-    camera_angle float, -- 0 = front of vehicle, +90 directly left, etc
+    camera_angle float default 0, -- 0 = front of vehicle, +90 directly left, etc
     image_format VARCHAR(4), -- ex: png
     encoded_image bytea, -- the actual jpeg/png/etc bytes
-    PRIMARY KEY (vehicle_id, entry_num, camera_id),
+    PRIMARY KEY (vehicle_id, entry_num, camera_id, camera_angle),
     FOREIGN KEY (vehicle_id, entry_num) REFERENCES nav.position_log (vehicle_id, entry_num)
 );
 
@@ -75,6 +75,11 @@ CREATE INDEX IF NOT EXISTS idx_pos_view_veh_sess ON nav.position_views (
 CREATE INDEX IF NOT EXISTS idx_pos_view_veh_entry ON nav.position_views (
     vehicle_id,
     entry_num
+);
+CREATE INDEX IF NOT EXISTS idx_pos_view_veh_entry_angles ON nav.position_views (
+    vehicle_id,
+    entry_num,
+    camera_id
 );
 
 CREATE TABLE IF NOT EXISTS nav.assignments (
