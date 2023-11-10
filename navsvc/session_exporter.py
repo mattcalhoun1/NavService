@@ -28,6 +28,7 @@ class SessionExporter:
                 vehicle_id=vehicle_id,
                 entry_num = m['entry_num'],
                 camera_id=m['camera_id'],
+                camera_angle=m['camera_angle'],
                 file_name=f"{out_dir}/{vehicle_id}_{session_id}/{m['entry_num']}_{m['camera_id']}_{m['camera_angle']}.{m['image_format']}")
         self.cleanup()
 
@@ -100,14 +101,14 @@ class SessionExporter:
 
         return entries
     
-    def save_position_image (self, vehicle_id, entry_num, camera_id, file_name):
+    def save_position_image (self, vehicle_id, entry_num, camera_id, camera_angle, file_name):
         success = False
         query = ''.join([
             "SELECT encoded_image ",
             " FROM nav.position_views ",
-            " WHERE vehicle_id =  %s and entry_num = %s and camera_id = %s "
+            " WHERE vehicle_id =  %s and entry_num = %s and camera_id = %s and camera_angle = %s "
         ])
-        params = (vehicle_id, entry_num, camera_id)
+        params = (vehicle_id, entry_num, camera_id, camera_angle)
 
         db = self.get_db()
         db.get_cursor('q').execute(query,params)
