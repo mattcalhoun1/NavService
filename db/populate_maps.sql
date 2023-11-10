@@ -9,7 +9,7 @@ VALUES (
     'basement',
     'Basement - Pole 0,0 lights and objects',
     '{}',
-    '/home/matt/projects/services/NavService/maps/basement.json',
+    '/home/matt/services/NavService/maps/basement.json',
     true
 
 ) 
@@ -33,7 +33,7 @@ VALUES (
     'basement_v2',
     'Basement V2 - Pole 0,0 lights and objects',
     '{}',
-    '/home/matt/projects/services/NavService/maps/basement_v2.json',
+    '/home/matt/services/NavService/maps/basement_v2.json',
     true
 
 ) 
@@ -57,7 +57,7 @@ VALUES (
     'basement_lights',
     'Basement V2 - Pole 0,0 lights only',
     '{}',
-    '/home/matt/projects/services/NavService/maps/basement_lights.json',
+    '/home/matt/services/NavService/maps/basement_lights.json',
     true
 
 ) 
