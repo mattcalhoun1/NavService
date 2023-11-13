@@ -1,11 +1,11 @@
 {
     "landmarks": {
         "sw_light": {
-            "pattern":"sideways_triangle",
+            "pattern":"sideways_triangle_left",
             "type":"light",
             "model":"lights",
-            "x":-142,
-            "y":-84,
+            "x":-136,
+            "y":-80,
             "height":15.5,
             "altitude":25.5,
             "confidence":0.25,
@@ -16,8 +16,8 @@
             "pattern":"square",
             "type":"light",
             "model":"lights",
-            "x":128,
-            "y":182,
+            "x":125,
+            "y":176,
             "height":16,
             "altitude":15,
             "confidence":0.25,
@@ -28,14 +28,26 @@
             "pattern":"3",
             "type":"light",
             "model":"lights",
-            "x":-71,
-            "y":297,
+            "x":-66,
+            "y":288,
             "height":29,
             "altitude":36.5,
             "confidence":0.25,
             "lidar_visible":true,
             "priority":10
-        }
+        },
+        "se_light": {
+            "pattern":"sideways_triangle_right",
+            "type":"light",
+            "model":"lights",
+            "x":117,
+            "y":74,
+            "height":15.5,
+            "altitude":16.75,
+            "confidence":0.25,
+            "lidar_visible":true,
+            "priority":10
+        }    
     },
     "shape":"rectangle",
     "boundaries" : {
