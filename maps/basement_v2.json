@@ -89,7 +89,7 @@
             "type":"light",
             "model":"lights",
             "x":117,
-            "y":74,
+            "y":-72,
             "height":15.5,
             "altitude":16.75,
             "confidence":0.25,
@@ -136,16 +136,16 @@
             "ymax":135
         },
         "fp_house": {
-            "xmin":-74,
-            "ymin":65,
-            "xmax":-64,
-            "ymax":74
+            "xmin":-82,
+            "ymin":75,
+            "xmax":-72,
+            "ymax":82
         },
         "fp_tree": {
-            "xmin":90,
-            "ymin":99,
-            "xmax":107,
-            "ymax":116
+            "xmin":-150,
+            "ymin":153,
+            "xmax":-142,
+            "ymax":169
         },
         "post_center": {
             "xmin":-3,
