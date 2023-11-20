@@ -51,7 +51,7 @@
             "height":15.5,
             "altitude":16.75,
             "confidence":0.25,
-            "lidar_visible":true,
+            "lidar_visible":false,
             "priority":10,
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
