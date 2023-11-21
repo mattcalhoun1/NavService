@@ -11,7 +11,7 @@
             "confidence":0.6,
             "lidar_visible":true,
             "priority":6,
-            "tier":2,
+            "tier":"mid",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },
@@ -26,7 +26,7 @@
             "confidence":0.6,
             "lidar_visible":true,
             "priority":8,
-            "tier":2,
+            "tier":"mid",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },
@@ -41,7 +41,7 @@
             "confidence":0.6,
             "lidar_visible":true,
             "priority":9,
-            "tier":2,
+            "tier":"low",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },   
@@ -56,7 +56,7 @@
             "confidence":0.6,
             "lidar_visible":false,
             "priority":7,
-            "tier":2,
+            "tier":"mid",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },
@@ -71,7 +71,7 @@
             "confidence":0.25,
             "lidar_visible":true,
             "priority":3,
-            "tier":1,
+            "tier":"top",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },	
@@ -86,7 +86,7 @@
             "confidence":0.25,
             "lidar_visible":false,
             "priority":2,
-            "tier":1,
+            "tier":"top",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },
@@ -101,7 +101,7 @@
             "confidence":0.25,
             "lidar_visible":true,
             "priority":1,
-            "tier":1,
+            "tier":"top",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },
@@ -116,7 +116,7 @@
             "confidence":0.25,
             "lidar_visible":false,
             "priority":4,
-            "tier":1,
+            "tier":"top",
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         }        
