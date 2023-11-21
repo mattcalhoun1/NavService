@@ -10,7 +10,8 @@
             "altitude":33.5,
             "confidence":0.25,
             "lidar_visible":true,
-            "priority":8,
+            "priority":3,
+            "tier":1,
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },	
@@ -24,7 +25,8 @@
             "altitude":15,
             "confidence":0.25,
             "lidar_visible":false,
-            "priority":9,
+            "priority":2,
+            "tier":1,
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },
@@ -38,7 +40,8 @@
             "altitude":24.25,
             "confidence":0.25,
             "lidar_visible":true,
-            "priority":10,
+            "priority":1,
+            "tier":1,
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
         },
@@ -52,10 +55,11 @@
             "altitude":16.75,
             "confidence":0.25,
             "lidar_visible":false,
-            "priority":10,
+            "priority":4,
+            "tier":1,
             "min_visual_angle_preference":15.0,
             "max_visual_angle_preference":165.0
-        }            
+        }             
     },
     "shape":"rectangle",
     "boundaries" : {
