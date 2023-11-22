@@ -112,39 +112,46 @@
             "ymax":169
         },
         "post_center": {
-            "xmin":-3,
-            "ymin":-3,
-            "xmax":3,
-            "ymax":3
+            "xmin":-4,
+            "ymin":-4,
+            "xmax":4,
+            "ymax":4
         },
         "post_north": {
-            "xmin":-3,
-            "ymin":143,
-            "xmax":3,
-            "ymax":150
+            "xmin":-4,
+            "ymin":142,
+            "xmax":4,
+            "ymax":151
         }
     },
     "search": {
         "gazing_ball": {
-                "pattern":"na",
-                "model":"basement",
-                "height":12.0,
-                "confidence":0.6,
-                "lidar_visible":false
+            "pattern":"na",
+            "model":"basement",
+            "height":12.0,
+            "confidence":0.6,
+            "lidar_visible":false
         },
         "cone": {
-                "pattern":"na",
-                "model":"basement",
-                "height":12.0,
-                "confidence":0.6,
-                "lidar_visible":true
+            "pattern":"na",
+            "model":"basement",
+            "height":12.0,
+            "confidence":0.6,
+            "lidar_visible":true
         },
         "speaker": {
-                "pattern":"na",
-                "model":"basement",
-                "height":8.5,
-                "confidence":0.6,
-                "lidar_visible":false
-        }    
+            "pattern":"na",
+            "model":"basement",
+            "height":8.5,
+            "confidence":0.6,
+            "lidar_visible":false
+        },
+        "pineapple": {
+            "pattern":"na",
+            "model":"basement",
+            "height":14.0,
+            "confidence":0.6,
+            "lidar_visible":true
+        }
     }
 }
